@@ -13,9 +13,9 @@
 
     <!--//////////////////// ABOUT ////////////////////-->
 
-    <groupId>cz.jirutka.spring</groupId>
+    <groupId>com.github.megasend</groupId>
     <artifactId>spring-rest-exception-handler</artifactId>
-    <version>1.2.1-SNAPSHOT</version>
+    <version>1.2.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Spring REST Exception Handler</name>
