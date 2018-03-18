@@ -40,7 +40,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
-import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
@@ -53,7 +52,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Setter
-@Accessors(fluent=true)
+@Accessors(fluent = true)
 @SuppressWarnings("unchecked")
 public class RestHandlerExceptionResolverBuilder {
 
@@ -172,7 +171,7 @@ public class RestHandlerExceptionResolverBuilder {
      * not supported.
      */
     public RestHandlerExceptionResolverBuilder defaultContentType(String mediaType) {
-        defaultContentType( hasText(mediaType) ? MediaType.parseMediaType(mediaType) : null );
+        defaultContentType(hasText(mediaType) ? MediaType.parseMediaType(mediaType) : null);
         return this;
     }
 
@@ -180,12 +179,12 @@ public class RestHandlerExceptionResolverBuilder {
      * Registers the given exception handler for the specified exception type. This handler will be
      * also used for all the exception subtypes, when no more specific mapping is found.
      *
-     * @param exceptionClass The exception type handled by the given handler.
+     * @param exceptionClass   The exception type handled by the given handler.
      * @param exceptionHandler An instance of the exception handler for the specified exception
      *                         type or its subtypes.
      */
     public <E extends Exception> RestHandlerExceptionResolverBuilder addHandler(
-            Class<? extends E> exceptionClass, RestExceptionHandler<E, ?> exceptionHandler) {
+        Class<? extends E> exceptionClass, RestExceptionHandler<E, ?> exceptionHandler) {
 
         exceptionHandlers.put(exceptionClass, exceptionHandler);
         return this;
@@ -196,7 +195,7 @@ public class RestHandlerExceptionResolverBuilder {
      * determined from the handler.
      */
     public <E extends Exception>
-            RestHandlerExceptionResolverBuilder addHandler(AbstractRestExceptionHandler<E, ?> exceptionHandler) {
+    RestHandlerExceptionResolverBuilder addHandler(AbstractRestExceptionHandler<E, ?> exceptionHandler) {
 
         return addHandler(exceptionHandler.getExceptionClass(), exceptionHandler);
     }
@@ -207,10 +206,10 @@ public class RestHandlerExceptionResolverBuilder {
      * is found.
      *
      * @param exceptionClass The exception type to handle.
-     * @param status The HTTP status to map the specified exception to.
+     * @param status         The HTTP status to map the specified exception to.
      */
     public RestHandlerExceptionResolverBuilder addErrorMessageHandler(
-            Class<? extends Exception> exceptionClass, HttpStatus status) {
+        Class<? extends Exception> exceptionClass, HttpStatus status) {
 
         return addHandler(new ErrorMessageRestExceptionHandler<>(exceptionClass, status));
     }
@@ -232,23 +231,23 @@ public class RestHandlerExceptionResolverBuilder {
 
         Map<Class, RestExceptionHandler> map = new HashMap<>();
 
-        map.put( NoSuchRequestHandlingMethodException.class, new NoSuchRequestHandlingMethodExceptionHandler() );
-        map.put( HttpRequestMethodNotSupportedException.class, new HttpRequestMethodNotSupportedExceptionHandler() );
-        map.put( HttpMediaTypeNotSupportedException.class, new HttpMediaTypeNotSupportedExceptionHandler() );
-        map.put( MethodArgumentNotValidException.class, new MethodArgumentNotValidExceptionHandler() );
+//        map.put( NoSuchRequestHandlingMethodException.class, new NoSuchRequestHandlingMethodExceptionHandler() );
+        map.put(HttpRequestMethodNotSupportedException.class, new HttpRequestMethodNotSupportedExceptionHandler());
+        map.put(HttpMediaTypeNotSupportedException.class, new HttpMediaTypeNotSupportedExceptionHandler());
+        map.put(MethodArgumentNotValidException.class, new MethodArgumentNotValidExceptionHandler());
 
         if (ClassUtils.isPresent("javax.validation.ConstraintViolationException", getClass().getClassLoader())) {
-            map.put( ConstraintViolationException.class, new ConstraintViolationExceptionHandler() );
+            map.put(ConstraintViolationException.class, new ConstraintViolationExceptionHandler());
         }
 
-        addHandlerTo( map, HttpMediaTypeNotAcceptableException.class, NOT_ACCEPTABLE );
-        addHandlerTo( map, MissingServletRequestParameterException.class, BAD_REQUEST );
-        addHandlerTo( map, ServletRequestBindingException.class, BAD_REQUEST );
-        addHandlerTo( map, ConversionNotSupportedException.class, INTERNAL_SERVER_ERROR );
-        addHandlerTo( map, TypeMismatchException.class, BAD_REQUEST );
-        addHandlerTo( map, HttpMessageNotReadableException.class, UNPROCESSABLE_ENTITY );
-        addHandlerTo( map, HttpMessageNotWritableException.class, INTERNAL_SERVER_ERROR );
-        addHandlerTo( map, MissingServletRequestPartException.class, BAD_REQUEST );
+        addHandlerTo(map, HttpMediaTypeNotAcceptableException.class, NOT_ACCEPTABLE);
+        addHandlerTo(map, MissingServletRequestParameterException.class, BAD_REQUEST);
+        addHandlerTo(map, ServletRequestBindingException.class, BAD_REQUEST);
+        addHandlerTo(map, ConversionNotSupportedException.class, INTERNAL_SERVER_ERROR);
+        addHandlerTo(map, TypeMismatchException.class, BAD_REQUEST);
+        addHandlerTo(map, HttpMessageNotReadableException.class, UNPROCESSABLE_ENTITY);
+        addHandlerTo(map, HttpMessageNotWritableException.class, INTERNAL_SERVER_ERROR);
+        addHandlerTo(map, MissingServletRequestPartException.class, BAD_REQUEST);
         addHandlerTo(map, Exception.class, INTERNAL_SERVER_ERROR);
 
         // this class didn't exist before Spring 4.0
